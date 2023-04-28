@@ -1,9 +1,18 @@
+<template>
+  <div></div>
+</template>
+
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
+import { ref, onMounted } from 'vue'
+const squirrel = ref('')
+async function getSquirrel() {
+  let res = await fetch('https://data.cityofnewyork.us/resource/vfnx-vebw.json')
+  let data = await res.json()
+  squirrel.values = data.results
+}
+onMounted(() => {
+  getSquirrel()
+})
 </script>
 
-<template>
-  <main>
-    <TheWelcome />
-  </main>
-</template>
+<style scoped></style>
