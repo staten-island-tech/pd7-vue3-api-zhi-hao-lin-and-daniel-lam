@@ -3,14 +3,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, Created } from 'vue'
 const squirrel = ref('')
 async function getSquirrel() {
   let res = await fetch('https://data.cityofnewyork.us/resource/vfnx-vebw.json')
   let data = await res.json()
   squirrel.value = data.results
 }
-onMounted(() => {
+Created(() => {
   getSquirrel()
 })
 </script>
