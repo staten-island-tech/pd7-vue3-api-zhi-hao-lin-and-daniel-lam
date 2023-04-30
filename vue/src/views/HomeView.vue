@@ -4,11 +4,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-const squirrel = ref('')
+const tree = ref('')
 async function getSquirrel() {
-  let res = await fetch('https://data.cityofnewyork.us/resource/vfnx-vebw.json')
+  let res = await fetch('https://data.cityofnewyork.us/resource/uvpi-gqnh.json')
   let data = await res.json()
-  squirrel.value = data.results
+  tree.value = data.results
 }
 onMounted(() => {
   getSquirrel()
