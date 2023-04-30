@@ -25,7 +25,7 @@ export default {
       chartOptions: {
         responsive: true,
         maintainAspectRatio: true,
-        backgroundColor: ['#FF0000', '#FFFF00', '#0000FF', '#00FF00', '#A020F0']
+        backgroundColor: ['#963a2f', '#d58258', '#ecb984', '#fffee9', '#a8a676']
       }
     }
   },
