@@ -1,11 +1,11 @@
 <template>
-    <DonutCard/>
+    <DoughnutCard/>
   </template>
   
   <script>
-  import DonutCard from '../components/DonutCard.vue';
+  import DoughnutCard from '../components/DoughnutCard.vue';
   export default {
     name: 'App',
-    components: { DonutCard }
+    components: { DoughnutCard }
   }
   </script>
