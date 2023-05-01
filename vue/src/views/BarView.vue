@@ -1,13 +1,8 @@
 <template>
-    <div>
-      <BarGraph/>
-    </div>
-  </template>
-  
-  <script>
-  import BarGraph from '../components/BarGraph.vue'
-  export default {
-    name: 'BarGraph',
-    components: { BarGraph }
-  }
-  </script>
+ <App></App>
+</template>
+
+<script setup>
+import { ref, onMounted } from "vue";
+import App from "../components/BarGraph.vue"
+</script>

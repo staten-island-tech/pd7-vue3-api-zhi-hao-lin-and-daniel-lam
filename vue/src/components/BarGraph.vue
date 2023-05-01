@@ -1,57 +1,46 @@
 <template>
-  <Bar :data="data" :options="options" />
+  <header>
+      <RouterLink to="/">Back to Main</RouterLink>
+  </header>
+  <Bar v-if="showGraph" :data="data" :options="options" />
 </template>
 
-<script lang="ts">
+<script>
 import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale
-} from 'chart.js'
+  Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale} from 'chart.js'
 import { Bar } from 'vue-chartjs'
-
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
-
 export default {
-  name: 'BarGraph',
+  name: 'App',
   components: {
     Bar
   },
   data() {
     return {
+      showGraph: false,
       data: {
-        labels: ['Alive', 'Dead', 'Stump'],
-        datasets: [
-          {
-            label: 'Tree Statuses',
-            data: [1, 2, 3],
-            backgroundColor: ['#ffc0cb', '#383838', '#003500']
-          }
-        ]
+        labels: ['Alive','Stump','Dead'],
+        datasets: [{ data: [] }]
       },
       options: {
-        responsive: true
+        responsive: true,
+        backgroundColor: ['#963a2f', '#d58258', '#ecb984']
       }
     }
   },
   async mounted() {
-    try {
-      const res = await fetch('https://data.cityofnewyork.us/resource/uvpi-gqnh.json')
-      const treeData = await res.json()
-      const Alive = treeData.filter((tree) => tree.status === 'Alive')
-      this.chartData.datasets[0].data.push(Alive.length)
-      const Dead = treeData.filter((tree) => tree.status === 'Dead')
-      this.chartData.datasets[0].data.push(Dead.length)
-      const Stump = treeData.filter((tree) => tree.status === 'Stump')
-      this.chartData.datasets[0].data.push(Stump.length)
-    } catch (e) {
-      console.error(e)
-    }
-    console.log(this.chartData)
+    let res = await fetch('https://data.cityofnewyork.us/resource/uvpi-gqnh.json')
+    let treeStatus = await res.json()
+    console.log(treeStatus)
+    const alive = treeStatus.filter((treeEl) => treeEl.status === 'Alive')
+    this.data.datasets[0].data.push(alive.length)
+    console.log(alive.length)
+    const stump = treeStatus.filter((treeEl) => treeEl.status === 'Stump')
+    this.data.datasets[0].data.push(gray.length)
+    console.log(stump.length)
+    const dead = treeStatus.filter((treeEl) => treeEl.status === 'Dead')
+    this.data.datasets[0].data.push(dead.length)
+    console.log(dead.length)
   }
 }
 </script>

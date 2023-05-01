@@ -19,7 +19,7 @@ const router = createRouter({
     },
     {
       path: '/bar',
-      name:'BarView',
+      name:'bar',
       component: () => import('../views/BarView.vue')
     }
   ]
