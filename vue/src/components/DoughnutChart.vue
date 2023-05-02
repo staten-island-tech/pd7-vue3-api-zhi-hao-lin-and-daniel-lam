@@ -87,7 +87,7 @@ export default {
 h1 {
   text-align: center;
   color: rgb(73, 66, 53);
-  font-size: 2.75rem;
+  font-size: 2.55rem;
 }
 h1:hover {
   animation: shake 0.5s;
