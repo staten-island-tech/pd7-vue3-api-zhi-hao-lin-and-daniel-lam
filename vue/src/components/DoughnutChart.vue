@@ -1,132 +1,91 @@
 <template>
-  <div class="chart">
-    <RouterLink to="/">Back to Main</RouterLink>
-    <h1>Types of Trees</h1>
-    <Doughnut v-if="loaded" :data="chartData" :options="chartOptions" />
-  </div>
-</template>
-
-<script>
-import { Doughnut } from 'vue-chartjs'
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
-ChartJS.register(ArcElement, Tooltip, Legend)
-export default {
-  name: 'DoughnutChart',
-  components: {
-    Doughnut
-  },
-  data() {
-    return {
-      loaded: false,
-      chartData: {
-        labels: [
-          'London planetree',
-          'honeylocust',
-          'American linden',
-          'red maple',
-          'ginkgo',
-          'willow oak',
-          'sycamore maple',
-          'Amur maple',
-          'pin oak',
-          'hedge maple'
-        ],
-        datasets: [{ data: [] }]
+  <RouterLink to="/bar">Click here to see bar chart</RouterLink>
+    <div class="chart">
+      <Doughnut v-if="loaded" :data="chartData" :options="chartOptions" />
+      <button @click="getTreeBoro()">Amount of Trees in Each Borough</button>
+      <button @click="getTreeSpecies()">Different Types of Tree Species</button>
+    </div>
+  </template>
+  
+  <script>
+  import { Doughnut } from 'vue-chartjs'
+  import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
+  
+  ChartJS.register(ArcElement, Tooltip, Legend)
+  
+  export default {
+    name: 'DoughnutChart',
+    components: {
+      Doughnut
+    },
+    data() {
+      return {
+        loaded: false,
+        treeBoro: false,
+        treeSpecies: false,
+        chartData: {
+          labels: [],
+          datasets: [{ data: [] }]
+        },
+        chartOptions: {
+          responsive: true,
+          backgroundColor: []
+        }
+      }
+    },
+    methods: {
+      async getTreeBoro() {
+        this.treeBoro = true
+        this.treeSpecies = false
+        this.loaded = false
+        try {
+          const res = await fetch('https://data.cityofnewyork.us/resource/uvpi-gqnh.json')
+          const treeData = await res.json()
+          //array methods filter trees by borough
+          const staten= treeData.filter((treeEl) => treeEl.boroname === 'Staten Island')
+          const brooklyn = treeData.filter((treeEl) => treeEl.boroname === 'Brooklyn')
+          const queens = treeData.filter((treeEl) => treeEl.boroname === 'Queens')
+          const manhattan = treeData.filter((treeEl) => treeEl.boroname === 'Manhattan')
+          const bronx = treeData.filter((treeEl) => treeEl.boroname === 'Bronx')
+          //display numbers on chart
+          this.chartData.datasets[0].data = [staten.length, brooklyn.length, queens.length, manhattan.length, bronx.length]
+          this.chartData.labels = ['Staten Island', 'Brooklyn', 'Queens', 'Manhattan', 'Bronx']
+          this.chartOptions.backgroundColor = ["#469e34", "#edba1f", "#1e590b","#ba142b","#9adb2a"]
+  
+          this.loaded = true
+        } catch (e) {
+          console.error(e)
+        }
+        console.log(this.chartData)
       },
-      chartOptions: {
-        responsive: true,
-        maintainAspectRatio: true,
-        backgroundColor: [
-          '#963a2f',
-          '#d58258',
-          '#ecb984',
-          '#fffee9',
-          '#a8a676',
-          '#c37367',
-          '#e8d3a3',
-          '#ffa633',
-          '#5d6f66',
-          '#e77e9b'
-        ]
+      async getTreeSpecies() {
+        this.treeBoro = false
+        this.treeSpecies = true
+        this.loaded = false
+        try {
+          const res = await fetch('https://data.cityofnewyork.us/resource/uvpi-gqnh.json')
+          const treeData = await res.json()
+          //filter trees by species
+          const londonTree = treeData.filter((treeEl) => treeEl.spc_common === "London planetree");
+          const honeyTree = treeData.filter((treeEl) => treeEl.spc_common === "honeylocust");
+          const americanTree = treeData.filter((treeEl) => treeEl.spc_common === "American linden");
+          const redTree = treeData.filter((treeEl) => treeEl.spc_common === "red maple");
+          const ginkgoTree = treeData.filter((treeEl) => treeEl.spc_common === "ginkgo");
+          const willowTree = treeData.filter((treeEl) => treeEl.spc_common === "willow oak");
+          const sycamoreTree = treeData.filter((treeEl) => treeEl.spc_common === "sycamore maple");
+          const amurTree = treeData.filter((treeEl) => treeEl.spc_common === "Amur maple");
+          const pinTree = treeData.filter((treeEl) => treeEl.spc_common === "pin oak");
+          const hedgeTree = treeData.filter((treeEl) => treeEl.spc_common === "hedge maple");
+          //end
+          this.chartData.datasets[0].data = [londonTree.length, honeyTree.length, americanTree.length, redTree.length, ginkgoTree.length, willowTree.length, sycamoreTree.length, amurTree.length, pinTree.length, hedgeTree.length]
+          this.loaded = true
+          this.chartData.labels = ['London Planetree', 'Honeylocust', 'American Linden', 'Red Maple', 'Ginkgo', 'Willow Oak', 'Sycamore Maple', 'Amur Maple', 'Pin Oak', 'Hedge Maple']
+          this.chartOptions.backgroundColor = ["#469e34", "#edba1f", "#1e590b","#ba142b","#9adb2a","#5C4033","#042b0f", "#ff0357","#98f296","#6dad6c"]
+        } catch (e) {
+          console.error(e)
+        }
+        console.log(this.chartData)
       }
     }
-  },
-  async mounted() {
-    try {
-      const res = await fetch('https://data.cityofnewyork.us/resource/uvpi-gqnh.json')
-      const treeData = await res.json()
-      const red = treeData.filter((tree) => tree.spc_common === 'London planetree')
-      this.chartData.datasets[0].data.push(red.length)
-      const yellow = treeData.filter((tree) => tree.spc_common === 'honeylocust')
-      this.chartData.datasets[0].data.push(yellow.length)
-      const blue = treeData.filter((tree) => tree.spc_common === 'American linden')
-      this.chartData.datasets[0].data.push(blue.length)
-      const green = treeData.filter((tree) => tree.spc_common === 'red maple')
-      this.chartData.datasets[0].data.push(green.length)
-      const purple = treeData.filter((tree) => tree.spc_common === 'ginkgo')
-      this.chartData.datasets[0].data.push(purple.length)
-      const orange = treeData.filter((tree) => tree.spc_common === 'willow oak')
-      this.chartData.datasets[0].data.push(orange.length)
-      const pink = treeData.filter((tree) => tree.spc_common === 'sycamore maple')
-      this.chartData.datasets[0].data.push(pink.length)
-      const brown = treeData.filter((tree) => tree.spc_common === 'Amur maple')
-      this.chartData.datasets[0].data.push(brown.length)
-      const black = treeData.filter((tree) => tree.spc_common === 'pin oak')
-      this.chartData.datasets[0].data.push(black.length)
-      const grey = treeData.filter((tree) => tree.spc_common === 'hedge maple')
-      this.chartData.datasets[0].data.push(grey.length)
-      this.loaded = true
-    } catch (e) {
-      console.error(e)
-    }
-    console.log(this.chartData)
   }
-}
-</script>
-<style scoped>
-h1 {
-  text-align: center;
-  color: rgb(73, 66, 53);
-  font-size: 2.55rem;
-}
-h1:hover {
-  animation: shake 0.5s;
-  animation-iteration-count: infinite;
-}
-
-@keyframes shake {
-  0% {
-    transform: translate(1px, 1px) rotate(0deg);
-  }
-  10% {
-    transform: translate(-1px, -2px) rotate(-1deg);
-  }
-  20% {
-    transform: translate(-3px, 0px) rotate(1deg);
-  }
-  30% {
-    transform: translate(3px, 2px) rotate(0deg);
-  }
-  40% {
-    transform: translate(1px, -1px) rotate(1deg);
-  }
-  50% {
-    transform: translate(-1px, 2px) rotate(-1deg);
-  }
-  60% {
-    transform: translate(-3px, 1px) rotate(0deg);
-  }
-  70% {
-    transform: translate(3px, 1px) rotate(-1deg);
-  }
-  80% {
-    transform: translate(-1px, -1px) rotate(1deg);
-  }
-  90% {
-    transform: translate(1px, 2px) rotate(0deg);
-  }
-  100% {
-    transform: translate(1px, -2px) rotate(-1deg);
-  }
-}
-</style>
+  </script>

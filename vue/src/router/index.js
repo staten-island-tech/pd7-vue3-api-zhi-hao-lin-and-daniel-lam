@@ -12,14 +12,11 @@ const router = createRouter({
     {
       path: '/doughnut',
       name: 'doughnut',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/ChartView.vue')
+      component: () => import('../views/DoughnutView.vue')
     },
     {
       path: '/bar',
-      name:'bar',
+      name: 'bar',
       component: () => import('../views/BarView.vue')
     }
   ]
